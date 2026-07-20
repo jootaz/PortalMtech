@@ -486,7 +486,7 @@ function DocumentModal({ onClose, onSave }: { onClose: () => void; onSave: (doc:
   const [description, setDescription] = useState('')
   const [url, setUrl] = useState('')
   const [fileName, setFileName] = useState('')
-  const [fileSize, setFileSize] = useState('')
+  const [fileSize] = useState('')
   const [uploadType, setUploadType] = useState<'link' | 'file'>('link')
 
   const handleSave = () => {
