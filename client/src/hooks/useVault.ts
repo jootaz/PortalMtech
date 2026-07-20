@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
-import { VAULT_ENTRIES } from '@/data/mockData'
-import type { VaultCategory } from '@/types'
+import type { VaultEntry, VaultCategory } from '@/types'
 import { useApp } from '@/context/AppContext'
+import { VAULT_ENTRIES } from '@/data/mockData'
 
 type VaultFilter = 'all' | VaultCategory
 
@@ -9,11 +9,12 @@ export function useVault() {
   const { showToast } = useApp()
   const [activeFilter, setActiveFilter] = useState<VaultFilter>('all')
   const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set())
+  const [entries, setEntries] = useState<VaultEntry[]>(VAULT_ENTRIES)
 
   const filtered = useMemo(() => {
-    if (activeFilter === 'all') return VAULT_ENTRIES
-    return VAULT_ENTRIES.filter((e) => e.category === activeFilter)
-  }, [activeFilter])
+    if (activeFilter === 'all') return entries
+    return entries.filter((e) => e.category === activeFilter)
+  }, [activeFilter, entries])
 
   const toggleReveal = (id: string, name: string) => {
     setRevealedIds((prev) => {
@@ -28,15 +29,31 @@ export function useVault() {
     })
   }
 
-  const copyUsername = (name: string) => {
-    showToast(`Usuário copiado — ${name}`)
+  const copyUsername = async (entry: VaultEntry) => {
+    try {
+      await navigator.clipboard.writeText(entry.username)
+      showToast(`Usuário copiado — ${entry.name}`)
+    } catch {
+      showToast(`Erro ao copiar usuário`)
+    }
   }
 
-  const copyPassword = (name: string) => {
-    showToast(`Senha copiada — ação registrada no log`)
+  const copyPassword = async (entry: VaultEntry) => {
+    try {
+      await navigator.clipboard.writeText(entry.password)
+      showToast(`Senha copiada — ação registrada no log`)
+    } catch {
+      showToast(`Erro ao copiar senha`)
+    }
+  }
+
+  const addEntry = (entry: VaultEntry) => {
+    setEntries((prev) => [entry, ...prev])
+    showToast(`Entrada "${entry.name}" salva no cofre`)
   }
 
   return {
+    entries,
     filtered,
     activeFilter,
     setActiveFilter,
@@ -44,5 +61,6 @@ export function useVault() {
     toggleReveal,
     copyUsername,
     copyPassword,
+    addEntry,
   }
 }

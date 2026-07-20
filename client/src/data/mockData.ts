@@ -189,12 +189,12 @@ export const ASSETS: Asset[] = [
 // ── Vault Entries ─────────────────────────────────────────────────────────────
 
 export const VAULT_ENTRIES: VaultEntry[] = [
-  { id: 'v1', name: 'SRV-DC-01 — Windows Server', username: 'Administrador', category: 'infra', url: '192.168.1.10', updatedAt: '2 dias atrás' },
-  { id: 'v2', name: 'Portal Azure AD', username: 'admin@empresa.com.br', category: 'access', url: 'portal.azure.com', updatedAt: '5 dias atrás' },
-  { id: 'v3', name: 'MySQL — Produção', username: 'root', category: 'database', url: '192.168.1.50:3306', updatedAt: '12 dias atrás' },
-  { id: 'v4', name: 'VPN corporativa — Fortinet', username: 'vpn-admin', category: 'network', url: 'vpn.empresa.com.br', updatedAt: '1 mês atrás' },
-  { id: 'v5', name: 'Wi-Fi corporativo — TI-Interno', username: 'WPA2 Enterprise', category: 'network', updatedAt: '2 meses atrás' },
-  { id: 'v6', name: 'PostgreSQL — Homologação', username: 'postgres', category: 'database', url: '192.168.1.51:5432', updatedAt: '3 meses atrás' },
+  { id: 'v1', name: 'SRV-DC-01 — Windows Server', username: 'Administrador', password: 'Adm@Server2024!', category: 'infra', url: '192.168.1.10', updatedAt: '2 dias atrás' },
+  { id: 'v2', name: 'Portal Azure AD', username: 'admin@empresa.com.br', password: 'Az!P0rtal#2024', category: 'access', url: 'portal.azure.com', updatedAt: '5 dias atrás' },
+  { id: 'v3', name: 'MySQL — Produção', username: 'root', password: 'Mysql$Prod789!', category: 'database', url: '192.168.1.50:3306', updatedAt: '12 dias atrás' },
+  { id: 'v4', name: 'VPN corporativa — Fortinet', username: 'vpn-admin', password: 'vpn123', category: 'network', url: 'vpn.empresa.com.br', updatedAt: '1 mês atrás' },
+  { id: 'v5', name: 'Wi-Fi corporativo — TI-Interno', username: 'WPA2 Enterprise', password: 'TI@WiFi2024#', category: 'network', updatedAt: '2 meses atrás' },
+  { id: 'v6', name: 'PostgreSQL — Homologação', username: 'postgres', password: 'Pg$Homolog456!', category: 'database', url: '192.168.1.51:5432', updatedAt: '3 meses atrás' },
 ]
 
 // ── Audit Logs ────────────────────────────────────────────────────────────────
