@@ -1,4 +1,4 @@
-import { TICKETS, AUDIT_LOGS } from '@/data/mockData'
+import { TICKETS } from '@/data/mockData'
 import {
   TICKET_STATUS_CLASS,
   TICKET_STATUS_LABEL,
