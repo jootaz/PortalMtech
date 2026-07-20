@@ -17,6 +17,8 @@ export function resolveRoleFromGroups(groups: string[] = []): UserRole {
 
 // Fallback: resolver por domínio de e-mail quando grupos não estão configurados
 export function resolveRoleFromEmail(email: string): UserRole {
+  const adminEmails = ['jfreire@matacompany.com']
+  if (adminEmails.includes(email)) return 'admin'
   if (email.endsWith('@ti.empresa.com.br')) return 'technician'
   return 'user'
 }
