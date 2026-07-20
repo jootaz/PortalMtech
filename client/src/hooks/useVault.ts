@@ -52,6 +52,23 @@ export function useVault() {
     showToast(`Entrada "${entry.name}" salva no cofre`)
   }
 
+  const updateEntry = (entry: VaultEntry) => {
+    setEntries((prev) => prev.map((e) => (e.id === entry.id ? entry : e)))
+    showToast(`Entrada "${entry.name}" atualizada`)
+  }
+
+  const deleteEntry = (id: string, name: string) => {
+    setEntries((prev) => prev.filter((e) => e.id !== id))
+    setRevealedIds((prev) => {
+      const next = new Set(prev)
+      next.delete(id)
+      return next
+    })
+    showToast(`Entrada "${name}" removida`)
+  }
+
+  const weakCount = entries.filter((e) => e.password.length < 10).length
+
   return {
     entries,
     filtered,
@@ -62,5 +79,8 @@ export function useVault() {
     copyUsername,
     copyPassword,
     addEntry,
+    updateEntry,
+    deleteEntry,
+    weakCount,
   }
 }

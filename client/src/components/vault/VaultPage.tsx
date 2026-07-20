@@ -2,12 +2,11 @@ import { useState, useMemo } from 'react'
 import {
   Plus, Search, User, Copy, Eye, EyeOff,
   Server, Globe, Database, Shield, Wifi,
-  LayoutGrid, RefreshCw, Pencil,
+  LayoutGrid, RefreshCw, Pencil, Trash2,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useVault } from '@/hooks/useVault'
 import {
-  VAULT_CATEGORY_LABEL,
   VAULT_ICON_CLASS,
 } from '@/utils/helpers'
 import type { VaultEntry, VaultCategory } from '@/types'
@@ -49,6 +48,9 @@ export function VaultPage() {
     copyUsername,
     copyPassword,
     addEntry,
+    updateEntry,
+    deleteEntry,
+    weakCount,
   } = useVault()
 
   const [search, setSearch] = useState('')
@@ -106,6 +108,14 @@ export function VaultPage() {
               </button>
             ))}
           </nav>
+
+          {/* Senhas fracas */}
+          {weakCount > 0 && (
+            <div className="mt-5 px-3 py-2.5 bg-red-50 border border-red-100 rounded-lg">
+              <p className="text-xs font-semibold text-red-700">{weakCount} senha{weakCount > 1 ? 's fracas' : ' fraca'}</p>
+              <p className="text-[11px] text-red-400 mt-0.5">Considere atualizar</p>
+            </div>
+          )}
         </aside>
 
         {/* Main */}
@@ -141,6 +151,7 @@ export function VaultPage() {
                 onCopyUser={() => copyUsername(entry)}
                 onCopyPwd={() => copyPassword(entry)}
                 onEdit={() => { setEditEntry(entry); setIsModalOpen(true) }}
+                onDelete={() => deleteEntry(entry.id, entry.name)}
               />
             ))}
           </div>
@@ -152,7 +163,11 @@ export function VaultPage() {
           initial={editEntry}
           onClose={() => setIsModalOpen(false)}
           onSave={(entry) => {
-            addEntry(entry)
+            if (editEntry) {
+              updateEntry(entry)
+            } else {
+              addEntry(entry)
+            }
             setIsModalOpen(false)
           }}
         />
@@ -168,10 +183,12 @@ interface VaultEntryRowProps {
   onCopyUser: () => void
   onCopyPwd: () => void
   onEdit: () => void
+  onDelete: () => void
 }
 
-function VaultEntryRow({ entry, isRevealed, onReveal, onCopyUser, onCopyPwd, onEdit }: VaultEntryRowProps) {
+function VaultEntryRow({ entry, isRevealed, onReveal, onCopyUser, onCopyPwd, onEdit, onDelete }: VaultEntryRowProps) {
   const Icon = CATEGORY_ICONS[entry.category]
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   return (
     <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-gray-200 transition-colors">
@@ -201,90 +218,22 @@ function VaultEntryRow({ entry, isRevealed, onReveal, onCopyUser, onCopyPwd, onE
         <button className="btn-icon" onClick={onEdit} title="Editar">
           <Pencil size={14} />
         </button>
-      </div>
-    </div>
-  )
-}
-
-interface EntryModalProps {
-  initial: VaultEntry | null
-  onClose: () => void
-  onSave: (entry: VaultEntry) => void
-}
-
-function EntryModal({ initial, onClose, onSave }: EntryModalProps) {
-  const [name, setName] = useState(initial?.name ?? '')
-  const [category, setCategory] = useState<VaultCategory>(initial?.category ?? 'infra')
-  const [username, setUsername] = useState(initial?.username ?? '')
-  const [password, setPassword] = useState(initial?.password ?? '')
-  const [url, setUrl] = useState(initial?.url ?? '')
-  const [showPassword, setShowPassword] = useState(false)
-
-  const handleSave = () => {
-    if (!name.trim() || !username.trim() || !password.trim()) return
-    onSave({
-      id: initial?.id ?? `v${Date.now()}`,
-      name: name.trim(),
-      username: username.trim(),
-      password: password.trim(),
-      category,
-      url: url.trim() || undefined,
-      updatedAt: 'Agora mesmo',
-    })
-  }
-
-  const CATEGORY_OPTIONS: { value: VaultCategory; label: string }[] = [
-    { value: 'infra', label: 'Infraestrutura' },
-    { value: 'access', label: 'Acesso' },
-    { value: 'network', label: 'Rede' },
-    { value: 'database', label: 'Banco de dados' },
-  ]
-
-  return (
-    <div
-      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="bg-white rounded-xl border border-gray-100 w-[460px]">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-900">
-            {initial ? 'Editar entrada' : 'Nova entrada'}
-          </h2>
-          <button className="btn-icon" onClick={onClose} aria-label="Fechar">
-            <Plus size={14} className="rotate-45" />
+        {confirmDelete ? (
+          <>
+            <button
+              className="btn-icon border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
+              onClick={onDelete}
+              title="Confirmar exclusão"
+            >
+              <Trash2 size={14} />
+            </button>
+            <button className="btn-icon" onClick={() => setConfirmDelete(false)} title="Cancelar">
+              <Plus size={14} className="rotate-45" />
+            </button>
+          </>
+        ) : (
+          <button className="btn-icon" onClick={() => setConfirmDelete(true)} title="Excluir">
+            <Trash2 size={14} />
           </button>
-        </div>
-        <div className="px-6 py-5 space-y-4">
-          <div>
-            <label className="field-label">Nome / descrição</label>
-            <input className="field-input" placeholder="Ex: Firewall — Cisco ASA" value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div>
-            <label className="field-label">Categoria</label>
-            <select className="field-input" value={category} onChange={(e) => setCategory(e.target.value as VaultCategory)}>
-              {CATEGORY_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="field-label">Usuário / login</label>
-            <input className="field-input" placeholder="admin" value={username} onChange={(e) => setUsername(e.target.value)} />
-          </div>
-          <div>
-            <label className="field-label">Senha</label>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <input
-                  className="field-input pr-9"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  onClick={() => setShowPassword((v) => !v)}
-                >
-                  {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+        )}
+      </div>
