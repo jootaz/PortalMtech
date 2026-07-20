@@ -288,35 +288,3 @@ function EntryModal({ initial, onClose, onSave }: EntryModalProps) {
                   onClick={() => setShowPassword((v) => !v)}
                 >
                   {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-              <button
-                className="btn flex-shrink-0"
-                type="button"
-                onClick={() => { setPassword(generatePassword()); setShowPassword(true) }}
-              >
-                <RefreshCw size={13} />
-                Gerar
-              </button>
-            </div>
-          </div>
-          <div>
-            <label className="field-label">Endereço / URL (opcional)</label>
-            <input className="field-input" placeholder="192.168.1.1" value={url} onChange={(e) => setUrl(e.target.value)} />
-          </div>
-        </div>
-        <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
-          <button className="btn" onClick={onClose}>Cancelar</button>
-          <button
-            className="btn btn-primary"
-            onClick={handleSave}
-            disabled={!name.trim() || !username.trim() || !password.trim()}
-          >
-            <Shield size={13} />
-            Salvar entrada
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
