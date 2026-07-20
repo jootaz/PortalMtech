@@ -16,7 +16,7 @@ export function useVault() {
     return entries.filter((e) => e.category === activeFilter)
   }, [activeFilter, entries])
 
-  const toggleReveal = (id: string, name: string) => {
+  const toggleReveal = (id: string, _name: string) => {
     setRevealedIds((prev) => {
       const next = new Set(prev)
       if (next.has(id)) {
