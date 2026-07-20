@@ -59,6 +59,20 @@ export interface VaultEntry {
   updatedAt: string
 }
 
+export type DocumentCategory = 'manual' | 'training' | 'procedure' | 'other'
+
+export interface VaultDocument {
+  id: string
+  title: string
+  category: DocumentCategory
+  description?: string
+  url?: string
+  fileName?: string
+  fileSize?: string
+  uploadedBy: string
+  createdAt: string
+}
+
 export interface AuditLog {
   id: string
   action: string

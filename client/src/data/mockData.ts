@@ -3,6 +3,7 @@ import type {
   Conversation,
   Asset,
   VaultEntry,
+  VaultDocument,
   AuditLog,
 } from '@/types'
 
@@ -207,4 +208,47 @@ export const AUDIT_LOGS: AuditLog[] = [
   { id: 'a5', action: 'Senha atualizada — SRV-DC-01', actor: 'João Carlos', actorRole: 'Analista de TI', timestamp: 'Ontem, 14:05', severity: 'warning' },
   { id: 'a6', action: 'Senha revelada — Wi-Fi TI-Interno', actor: 'Maria Oliveira', actorRole: 'Analista de TI', timestamp: 'Ontem, 11:22', severity: 'danger' },
   { id: 'a7', action: 'Chamado #1038 concluído — Monitor', actor: 'João Carlos', actorRole: 'Analista de TI', timestamp: 'Ontem, 09:44', severity: 'info' },
+]
+
+// ── Vault Documents ───────────────────────────────────────────────────────────
+
+export const VAULT_DOCUMENTS: VaultDocument[] = [
+  {
+    id: 'd1',
+    title: 'Manual de Segurança da Informação',
+    category: 'manual',
+    description: 'Políticas e diretrizes de segurança da empresa.',
+    fileName: 'manual-seguranca.pdf',
+    fileSize: '2.4 MB',
+    uploadedBy: 'Jadir Freire',
+    createdAt: '10 dias atrás',
+  },
+  {
+    id: 'd2',
+    title: 'Treinamento — Uso Seguro da VPN',
+    category: 'training',
+    description: 'Guia completo para uso correto da VPN corporativa.',
+    url: 'https://treinamentos.empresa.com.br/vpn',
+    uploadedBy: 'Jadir Freire',
+    createdAt: '15 dias atrás',
+  },
+  {
+    id: 'd3',
+    title: 'Procedimento de Backup',
+    category: 'procedure',
+    description: 'Passo a passo para execução do backup semanal.',
+    fileName: 'proc-backup.pdf',
+    fileSize: '856 KB',
+    uploadedBy: 'Jadir Freire',
+    createdAt: '1 mês atrás',
+  },
+  {
+    id: 'd4',
+    title: 'Treinamento — Boas Práticas de Senha',
+    category: 'training',
+    description: 'Como criar e gerenciar senhas seguras.',
+    url: 'https://treinamentos.empresa.com.br/senhas',
+    uploadedBy: 'Jadir Freire',
+    createdAt: '2 meses atrás',
+  },
 ]

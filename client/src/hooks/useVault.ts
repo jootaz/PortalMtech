@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
-import type { VaultEntry, VaultCategory } from '@/types'
+import type { VaultEntry, VaultCategory, VaultDocument } from '@/types'
 import { useApp } from '@/context/AppContext'
-import { VAULT_ENTRIES } from '@/data/mockData'
+import { VAULT_ENTRIES, VAULT_DOCUMENTS } from '@/data/mockData'
 
 type VaultFilter = 'all' | VaultCategory
 
@@ -10,6 +10,7 @@ export function useVault() {
   const [activeFilter, setActiveFilter] = useState<VaultFilter>('all')
   const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set())
   const [entries, setEntries] = useState<VaultEntry[]>(VAULT_ENTRIES)
+  const [documents, setDocuments] = useState<VaultDocument[]>(VAULT_DOCUMENTS)
 
   const filtered = useMemo(() => {
     if (activeFilter === 'all') return entries
@@ -67,6 +68,16 @@ export function useVault() {
     showToast(`Entrada "${name}" removida`)
   }
 
+  const addDocument = (doc: VaultDocument) => {
+    setDocuments((prev) => [doc, ...prev])
+    showToast(`Documento "${doc.title}" adicionado`)
+  }
+
+  const deleteDocument = (id: string, title: string) => {
+    setDocuments((prev) => prev.filter((d) => d.id !== id))
+    showToast(`Documento "${title}" removido`)
+  }
+
   const weakCount = entries.filter((e) => e.password.length < 10).length
 
   return {
@@ -82,5 +93,8 @@ export function useVault() {
     updateEntry,
     deleteEntry,
     weakCount,
+    documents,
+    addDocument,
+    deleteDocument,
   }
 }
